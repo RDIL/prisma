@@ -7,11 +7,9 @@ query {
     cursor: {
       email: "a@a.de"
     }
-    orderBy: [
-      {
-        age: asc
-      }
-    ]
+    orderBy: {
+      age: asc
+    }
     skip: 12
     where: {
       age: {

@@ -126,28 +126,30 @@ describe('no args', () => {
     expect(() => document.validate(undefined, false, 'user', 'colorless')).toThrowErrorMatchingSnapshot()
   })
   test('nested create', () => {
-    const document = makeDocument({
-      dmmf,
-      select: {
-        data: {
-          id: 5,
-          name: 'Harshit',
-          email: 'a@a.de',
-          likedArticles: {
-            connect: null,
-          },
-          persona: {
-            create: {
-              id: 123,
-              isDeveloper: true,
-            },
+    const select = {
+      data: {
+        id: 5,
+        name: 'Harshit',
+        email: 'a@a.de',
+        likedArticles: {
+          connect: null,
+        },
+        persona: {
+          create: {
+            id: 123,
+            isDeveloper: true,
           },
         },
       },
+    }
+    const document = makeDocument({
+      dmmf,
+      select: select,
       rootTypeName: 'mutation',
       rootField: 'createOneUser',
       extensions: MergedExtensionsList.empty(),
     })
-    expect(() => document.validate(undefined, false, 'user', 'colorless')).toThrowErrorMatchingSnapshot()
+
+    expect(() => document.validate(select, false, 'user', 'colorless')).toThrowErrorMatchingSnapshot()
   })
 })

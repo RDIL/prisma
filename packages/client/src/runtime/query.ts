@@ -1407,25 +1407,19 @@ function tryInferArgs(
   const { isNullable, isRequired } = arg
 
   if (value === null && !isNullable && !isRequired) {
-    // we don't need to execute this ternary if not necessary
-    const isAtLeastOne = isInputArgType(inputType.type)
-      ? inputType.type.constraints.minNumFields !== null && inputType.type.constraints.minNumFields > 0
-      : false
-    if (!isAtLeastOne) {
-      return new Arg({
-        key,
-        value,
-        isEnum: inputType.location === 'enumTypes',
-        inputType,
-        error: {
-          type: 'invalidNullArg',
-          name: key,
-          invalidType: arg.inputTypes,
-          atLeastOne: false,
-          atMostOne: false,
-        },
-      })
-    }
+    return new Arg({
+      key,
+      value,
+      isEnum: inputType.location === 'enumTypes',
+      inputType,
+      error: {
+        type: 'invalidNullArg',
+        name: key,
+        invalidType: arg.inputTypes,
+        atLeastOne: false,
+        atMostOne: false,
+      },
+    })
   }
 
   // then the first
@@ -1483,18 +1477,6 @@ function tryInferArgs(
     }
   }
 
-  // the provided arg should be a list, but isn't
-  // that's fine for us as we can just turn this into a list with a single item
-  // and GraphQL even allows this. We're going the conservative route though
-  // and actually generate the [] around the value
-
-  if (!Array.isArray(value) && inputType.isList) {
-    // TODO: This "if condition" is just a hack until the query engine is fixed
-    if (key !== 'updateMany') {
-      value = [value]
-    }
-  }
-
   if (inputType.location === 'enumTypes' || inputType.location === 'scalar') {
     // if no value is incorrect
     return scalarToArg(key, value, arg, inputType, context)
@@ -1528,18 +1510,24 @@ function tryInferArgs(
   }
 
   if (!Array.isArray(value)) {
+    const invalidArgs: Arg[] = []
     for (const nestedArgInputType of arg.inputTypes) {
       const args = objectToArgs(value, nestedArgInputType.type as DMMF.InputType, context)
+      const nestedArg = new Arg({
+        key,
+        value: args,
+        isEnum: false,
+        schemaArg: arg,
+        inputType: nestedArgInputType,
+      })
+
       if (args.collectErrors().length === 0) {
-        return new Arg({
-          key,
-          value: args,
-          isEnum: false,
-          schemaArg: arg,
-          inputType: nestedArgInputType,
-        })
+        return nestedArg
+      } else {
+        invalidArgs.push(nestedArg)
       }
     }
+    return invalidArgs[0]
   }
 
   return new Arg({

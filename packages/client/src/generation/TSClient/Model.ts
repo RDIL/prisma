@@ -127,7 +127,7 @@ ${indent(
   groupByRootField.args
     .map((arg) => {
       arg.comment = getArgFieldJSDoc(this.type, DMMF.ModelAction.groupBy, arg)
-      return new InputField(arg, arg.name === 'by', this.genericsInfo).toTS()
+      return new InputField(arg, this.genericsInfo).toTS()
     })
     .concat(
       groupByType.fields
@@ -152,7 +152,7 @@ ${new OutputType(this.dmmf, groupByType).toTS()}
 
 type ${getGroupByPayloadName(model.name)}<T extends ${groupByArgsName}> = Prisma.PrismaPromise<
   Array<
-    PickArray<${groupByType.name}, T['by']> &
+    PickEnumerable<${groupByType.name}, T['by']> &
       {
         [P in ((keyof T) & (keyof ${groupByType.name}))]: P extends '_count'
           ? T[P] extends boolean
@@ -246,7 +246,7 @@ ${indent(
   aggregateRootField.args
     .map((arg) => {
       arg.comment = getArgFieldJSDoc(this.type, DMMF.ModelAction.aggregate, arg)
-      return new InputField(arg, false, this.genericsInfo).toTS()
+      return new InputField(arg, this.genericsInfo).toTS()
     })
     .concat(
       aggregateType.fields.map((f) => {
@@ -487,7 +487,7 @@ ${
       ? { orderBy: ${groupByArgsName}['orderBy'] }
       : { orderBy?: ${groupByArgsName}['orderBy'] },
     OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
-    ByFields extends TupleToUnion<T['by']>,
+    ByFields extends MaybeTupleToUnion<T['by']>,
     ByValid extends Has<ByFields, OrderFields>,
     HavingFields extends GetHavingFields<T['having']>,
     HavingValid extends Has<ByFields, HavingFields>,

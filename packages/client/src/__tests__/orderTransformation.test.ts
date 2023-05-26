@@ -27,11 +27,9 @@ describe('where transformation', () => {
     document.validate(select, false)
     expect(String(document)).toMatchInlineSnapshot(`
       query {
-        findManyUser(orderBy: [
-          {
-            email: asc
-          }
-        ]) {
+        findManyUser(orderBy: {
+          email: asc
+        }) {
           id
           name
           email
@@ -46,11 +44,9 @@ describe('where transformation', () => {
     `)
     expect(String(transformDocument(document))).toMatchInlineSnapshot(`
       query {
-        findManyUser(orderBy: [
-          {
-            email: asc
-          }
-        ]) {
+        findManyUser(orderBy: {
+          email: asc
+        }) {
           id
           name
           email
@@ -81,12 +77,10 @@ describe('where transformation', () => {
     })
     expect(String(document)).toMatchInlineSnapshot(`
       query {
-        findManyUser(orderBy: [
-          {
-            email: asc
-            id: asc
-          }
-        ]) {
+        findManyUser(orderBy: {
+          email: asc
+          id: asc
+        }) {
           id
           name
           email
@@ -101,12 +95,10 @@ describe('where transformation', () => {
     `)
     expect(String(transformDocument(document))).toMatchInlineSnapshot(`
       query {
-        findManyUser(orderBy: [
-          {
-            email: asc
-            id: asc
-          }
-        ]) {
+        findManyUser(orderBy: {
+          email: asc
+          id: asc
+        }) {
           id
           name
           email
@@ -124,33 +116,33 @@ describe('where transformation', () => {
     } catch (e) {
       expect(stripAnsi(e.message)).toMatchInlineSnapshot(`
 
-        Invalid \`prisma.users()\` invocation:
+                Invalid \`prisma.users()\` invocation:
 
-        {
-          orderBy: {
-            email: 'asc',
-            id: 'asc'
-          }
-          ~~~~~~~~~~~~~~~
-        }
+                {
+                  orderBy: {
+                    email: 'asc',
+                    id: 'asc'
+                  }
+                  ~~~~~~~~~~~~~~~
+                }
 
-        Argument orderBy of type UserOrderByWithRelationInput needs exactly one argument, but you provided email and id. Please choose one. Available args: 
-        type UserOrderByWithRelationInput {
-          id?: SortOrder
-          name?: SortOrder
-          email?: SortOrder
-          status?: SortOrder
-          nicknames?: SortOrder
-          permissions?: SortOrder
-          favoriteTree?: SortOrder
-          locationId?: SortOrder
-          someFloats?: SortOrder
-          location?: LocationOrderByWithRelationInput
-          posts?: PostOrderByRelationAggregateInput
-        }
+                Argument orderBy of type UserOrderByWithRelationInput needs exactly one argument, but you provided email and id. Please choose one. Available args: 
+                type UserOrderByWithRelationInput {
+                  id?: SortOrder
+                  name?: SortOrder
+                  email?: SortOrder
+                  status?: SortOrder
+                  nicknames?: SortOrder
+                  permissions?: SortOrder
+                  favoriteTree?: SortOrder
+                  locationId?: SortOrder
+                  someFloats?: SortOrder
+                  location?: LocationOrderByWithRelationInput
+                  posts?: PostOrderByRelationAggregateInput
+                }
 
 
-      `)
+            `)
     }
   })
 
