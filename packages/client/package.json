@@ -106,7 +106,7 @@
     "flat-map-polyfill": "0.3.8",
     "fs-extra": "11.1.0",
     "get-own-enumerable-property-symbols": "3.0.2",
-    "get-stream": "6.0.1",
+    "get-stream": "7.0.0",
     "globby": "11.1.0",
     "indent-string": "4.0.0",
     "is-obj": "2.0.0",
