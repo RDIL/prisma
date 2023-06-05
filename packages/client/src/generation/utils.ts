@@ -64,7 +64,7 @@ export function getAggregateInputType(aggregateOutputType: string): string {
 }
 
 export function getGroupByArgsName(modelName: string): string {
-  return `${capitalize(modelName)}GroupByArgs`
+  return `${modelName}GroupByArgs`
 }
 
 export function getGroupByPayloadName(modelName: string): string {
